@@ -48,10 +48,15 @@ def download_civitai_by_id(save_dir, model_id):
 @click.option('--l', help='Minimum_id', type=click.IntRange(min=0), default = 1)
 @click.option('--r', help='Maximum_id', type=click.IntRange(min=0), default = 0)
 @click.option('--save_dir', help='Directory to save models', type=str)
-def main(l, r, save_dir):
+@click.option('--pool_size', help='Size of multithread pools', type=click.IntRange(min=0), default = 16)
+def main(l, r, save_dir, pool_size):
 	print(f"[START] Program Start!")
-	for model_id in range(l, r+1):
+	pool = ThreadPool(pool_size)
+	def task(model_id):
 		download_civitai_by_id(save_dir, model_id)
+	pool.map(task, range(l, r+1))
+	pool.close()
+	pool.join()
 	print(f"[FINISH] Program Finished!")
 
 if __name__ == "__main__":
