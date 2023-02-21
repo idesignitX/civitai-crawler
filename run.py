@@ -12,10 +12,21 @@ def mkdir(dir):
 	if not os.path.exists(dir):
 		os.makedirs(dir)
 
+def file_exists(save_dir, model_id):
+	for file in os.listdir(save_dir):
+		if file.startswith(f"{model_id}_"):
+			return True
+	return False
+
 def download_civitai_by_id(save_dir, model_id):
 	# Make dir if not exists
 	mkdir(save_dir)
 	url = f"https://civitai.com/api/download/models/{model_id}"
+	# Skip if downloaded
+	if file_exists(save_dir, model_id):
+		print(f"[NOTICE] {url} is downloaded, return.")
+		return
+	# Download file
 	print(f"Downloading {url}...")
 	tmp_filename = os.path.join(save_dir, f"{model_id}.tmp")
 	with scraper.get(url, stream=True) as r:
