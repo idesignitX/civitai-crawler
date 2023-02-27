@@ -5,6 +5,7 @@ import cloudscraper
 import re
 import click
 import os
+import random
 
 scraper = cloudscraper.create_scraper(browser='chrome')
 
@@ -65,7 +66,9 @@ def main(l, r, save_dir, pool_size):
 	pool = ThreadPool(pool_size)
 	def task(model_id):
 		download_civitai_by_id(save_dir, model_id)
-	pool.map(task, range(l, r+1))
+	download_list = list(range(l, r+1))
+	random.shuffle(download_list)
+	pool.map(task, download_list)
 	pool.close()
 	pool.join()
 	print(f"[FINISH] Program Finished!")
