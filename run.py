@@ -47,8 +47,10 @@ def download_civitai_by_id(save_dir, model_id):
 		# Encode it into ISO-8859-1 and then return it to utf-8 (https://www.rfc-editor.org/rfc/rfc5987.txt)
 		headers_utf8 = r.headers["Content-Disposition"].encode('ISO-8859-1').decode()
 		print(headers_utf8)
-		file_name_raw = re.search(r'filename=\"(.*)\"', headers_utf8).group(1)
-		file_name = file_name_raw.replace(":", "_")
+		file_name = re.search(r'filename=\"(.*)\"', headers_utf8).group(1)
+		file_name = file_name.replace(":", "_")
+		file_name = file_name.replace("<", "(")
+		file_name = file_name.replace(">", ")")
 		save_name = os.path.join(save_dir, f"{model_id}_{file_name}")
 	# Rename temporary files to filename
 	if os.path.exists(save_name):
