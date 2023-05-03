@@ -7,7 +7,6 @@ from multiprocessing.dummy import Pool as ThreadPool
 import click
 import random
 
-root_dir = "Civitai_getlinks"
 civitai_url = "https://civitai.com/api/download/models/"
 global_encoding = 'utf-8'
 delimiter = "|        |"
@@ -75,9 +74,6 @@ def get_info(uid):
 			return (None, None)
 		headers_utf8 = r.headers["Content-Disposition"].encode('ISO-8859-1').decode()
 		file_name = re.search(r'filename=\"(.*)\"', headers_utf8).group(1)
-		file_name = file_name.replace(":", "_")
-		file_name = file_name.replace("<", "(")
-		file_name = file_name.replace(">", ")")
 		byte_size = r.headers["Content-Length"]
 		return (file_name, byte_size)
 
@@ -89,6 +85,7 @@ def get_info(uid):
 def main(l, r, save_dir, pool_size):
 	print(f"[START] Program Start!")
 	create_index(save_dir, l, r, pool_size)
+	print(f"[FINISH] Program Finished!")
 
 if __name__ == '__main__':
 	main()
